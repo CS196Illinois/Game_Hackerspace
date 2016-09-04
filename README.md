@@ -7,3 +7,4 @@
 * If you only have access to Linux, godspeed and give [this experimental build](http://forum.unity3d.com/threads/unity-on-linux-release-notes-and-known-issues.350256/) a try
 * [The Unity docs](https://docs.unity3d.com/Manual/index.html)
 * [Game Programming Patterns](http://gameprogrammingpatterns.com/contents.html) which will be discussed later in the semester
+* If you need a primer on C#, or programming in general, try out [this interactive site](http://www.learncs.org/) and the [absolute beginner scripting tutorial](https://unity3d.com/learn/tutorials/topics/scripting/coding-unity-absolute-beginner) from Unity
