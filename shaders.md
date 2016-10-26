@@ -69,8 +69,12 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 ```
 This is nice, but it would be even better if we could make it so that we evenly split it. How do we do this when our resolution isn't fixed, you ask? 
 
-#### Shader inputs
-If you click the little tab that says shader inputs above the shadertoy code box, you get a list of inputs you can use to help write your shader. You have time, mouse coordinates, and other stuff, but we are concerned with the screensize - in this case, called `iResolution`. There are many ways to use this, but one way is to divide our `xy` vector by it, so we can treat the screen as a range of values from 0 to 1.0 in the same way we do colors and the alpha channel.
+### Shader inputs
+If you click the little tab that says shader inputs above the shadertoy code box, you get a list of inputs you can use to help write your shader. You have time, mouse coordinates, and other stuff, but we are concerned with the screensize - in this case, called `iResolution`. 
+
+#### Using Shader Resolution Input
+There are many ways to use this, but one way is to divide our `xy` vector by it, so we can treat the screen as a range of values from 0 to 1.0 in the same way we do colors and the alpha channel.
+
 ```glsl
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
@@ -89,3 +93,75 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     }
 }
 ```
+
+What if instead of using an if-else statement, we use the `x` value as the value for one of the colors? We end up with a gradient!
+
+```glsl
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 xy = fragCoord.xy;
+    xy.x = xy.x / iResolution.x;
+    xy.y = xy.y / iResolution.y;
+    
+    vec4 gradientGreen = vec4(0, xy.x, 0.0, 1.0); // This sets g = xy.x
+    fragColor = gradientGreen;
+}
+```
+
+#### Using Image Channels for Input
+So far, what we have seen still isn't that exciting because we are not "shading" anything besides a solid black background. The way games and cool shader examples use shaders to amazing effect is by applying them on top of existing image data. We can start to experiment with this in Shadertoy by selecting one of the channels at the bottom of the screen in shader toy and selecting a type of input. There are many options that are fun to play with, but we'll use textures for now, which are basically just a static image.  
+
+```glsl
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    // This is the same as before, but we can divide a vector by a vector instead of doing 
+    // it separately to make things easier to work with and read
+    vec2 xy = fragCoord.xy / iResolution.xy;
+
+    vec4 texColor = texture2D(iChannel0,xy);//Get the pixel at xy from iChannel0
+    fragColor = texColor;//Set the screen pixel to that color
+}
+```
+We use the `texture2D` function to get the color at a coordinate of the texture, the same way we are using our xy.x and xy.y coordinates from 0 to 1.0. `ichannel0` refers to which channel we want to use, and `xy` is a 2-vector of the pixel we want from it.  
+
+We can combine this with our previous gradient idea, setting the `g` value of texColor to `xy.x`, to create a cool effect.
+
+```glsl
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    // This is the same as before, but we can divide a vector by a vector instead of doing 
+    // it separately to make things easier to work with and read
+    vec2 xy = fragCoord.xy / iResolution.xy;
+
+    vec4 texColor = texture2D(iChannel0,xy);//Get the pixel at xy from iChannel0
+    texColor.g = xy.x; // Making the green channel a horizontal gradient
+    fragColor = texColor;//Set the screen pixel to that color
+}
+```
+
+To really start to see the power of shaders, change the input of channel0 to the webcam!
+
+#### Using time for Input
+Using `iGlobalTime` along with trigonometric functions like `cos()` and `sin()`, you can start to put all the pieces together and create really cool effects. 
+
+```glsl
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 xy = fragCoord.xy / iResolution.xy;
+    vec4 texColor = texture2D(iChannel0,xy); // Get the pixel at xy from iChannel0
+    vec4 webcam = texture2D(iChannel1,xy); // Get the pixel at xy from iChannel0
+    texColor.r *= abs(sin(iGlobalTime));
+    texColor.g = webcam.g;
+    texColor.b *= abs(sin(iGlobalTime) * cos(iGlobalTime));
+    fragColor = texColor; // Set the screen pixel to that color
+}
+```
+
+## Time to try it out!
+For todays credit, create your own shader on Shadertoy and submit it as a link along with your netd. Some ideas:
+
+- Turn an input grayscale (black and white)
+- Strobe light! Rainbow strobe light!
+- Variations on gradients (diagonal gradients, 3 color gradients)
+- Do something cool with webcam, mouse, sound, time, or trig & math functions
+- Look at cool examples on Shadertoy for inspiration
