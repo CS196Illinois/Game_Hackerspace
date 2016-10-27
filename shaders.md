@@ -168,3 +168,6 @@ For todays credit, create your own shader on Shadertoy and submit it as a link a
 - Variations on gradients (diagonal gradients, 3 color gradients)
 - Do something cool with webcam, mouse, sound, time, or trig & math functions
 - Look at cool examples on Shadertoy for inspiration
+
+## Attribution
+Based on [a TutsPlus guide](https://gamedevelopment.tutsplus.com/series/a-beginners-guide-to-coding-graphics-shaders--cms-834) by Omar Shehata
