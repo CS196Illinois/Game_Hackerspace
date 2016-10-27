@@ -153,9 +153,12 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     texColor.r *= abs(sin(iGlobalTime));
     texColor.g = webcam.g;
     texColor.b *= abs(sin(iGlobalTime) * cos(iGlobalTime));
+    texColor /= texture2D(iChannel2, xy); // Using a soundcloud channel!
+    texColor += .5 * texture2D(iChannel2, vec2(.2, .2));
     fragColor = texColor; // Set the screen pixel to that color
 }
 ```
+channel0 is the texture that looks like oil or bubbles, channel1 is webcam, channel2 is a soundcloud song
 
 ## Time to try it out!
 For todays credit, create your own shader on Shadertoy and submit it as a link along with your netd. Some ideas:
